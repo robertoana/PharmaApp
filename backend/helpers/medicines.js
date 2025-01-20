@@ -1,7 +1,7 @@
 const { faker } = require('@faker-js/faker');
 const { medicineNames } = require('./medicineNames');
 
-function generateMedicines(count = 5) {
+function generateMedicines(count) {
   const medicines = [];
 
   for (let i = 0; i < count; i++) {
@@ -12,7 +12,7 @@ function generateMedicines(count = 5) {
       manufacturer: faker.company.name(),
       dosage: faker.number.int({ min: 10, max: 100 }),
       quantity: faker.number.int({ min: 1, max: 100 }),
-      expiryDate: faker.date.future(),
+      expiryDate: faker.date.future().toISOString(),
       stockLot: `Lot-${faker.number.int()}`,
     });
   }
@@ -21,4 +21,3 @@ function generateMedicines(count = 5) {
 
 module.exports = { generateMedicines };
 
-generateMedicines();

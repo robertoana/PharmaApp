@@ -1,7 +1,7 @@
 const { faker } = require('@faker-js/faker');
 const { medicineNames } = require('./medicineNames');
 
-function generateTransactions(count = 10) {
+function generateTransactions(count) {
   const transactions = [];
 
   for (let i = 0; i < count; i++) {
@@ -16,7 +16,7 @@ function generateTransactions(count = 10) {
       },
       type: faker.helpers.arrayElement(['entry', 'exit']),
       transactionPrice: parseFloat(quantity * price).toFixed(2),
-      transactionsDate: faker.date.recent(),
+      transactionsDate: faker.date.recent().toISOString(),
       userId: faker.string.uuid(),
     });
   }
