@@ -19,6 +19,13 @@
 
       <InputGroup>
         <InputGroupAddon>
+          <i class="pi pi-receipt"></i>
+        </InputGroupAddon>
+        <InputNumber v-model="dozaj" placeholder="Dozaj" />
+      </InputGroup>
+
+      <InputGroup>
+        <InputGroupAddon>
           <i class="pi pi-info"></i>
         </InputGroupAddon>
         <InputText v-model="descriere" placeholder="Descriere" />
@@ -55,6 +62,7 @@
       <Button
         label="Adaugă medicament"
         class="p-button-rounded p-button-success"
+        @click="addMedicine"
       />
     </div>
   </div>
@@ -67,6 +75,7 @@ import InputNumber from 'primevue/inputnumber';
 import InputText from 'primevue/inputtext';
 import Calendar from 'primevue/calendar';
 import Button from 'primevue/button';
+import axios from 'axios';
 
 export default {
   name: 'EntryView',
@@ -84,12 +93,36 @@ export default {
       pret: null,
       number: null,
       descriere: null,
+      dozaj: null,
       date: null,
       cantitate: null,
       dataExpirarii: null,
       lot: null,
       producator: null,
     };
+  },
+  methods: {
+    async addMedicine() {
+      try {
+        const payload = {
+          name: this.denumireMedicament,
+          price: this.pret,
+          description: this.descriere,
+          quantity: this.cantitate,
+          dosage: this.dozaj,
+          expiryDate: this.dataExpirarii,
+          stockLot: this.lot,
+          manufacturer: this.producator,
+        };
+        const respone = await axios.post(
+          'http://localhost:8090/api/medicines/addMedicine',
+          payload
+        );
+        console.log(respone.data.message);
+      } catch (err) {
+        alert(`Error: ${err.response.data.message}`);
+      }
+    },
   },
 };
 </script>

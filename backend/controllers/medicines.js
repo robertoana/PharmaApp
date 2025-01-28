@@ -16,6 +16,39 @@ const generateFakeMedicines = async (req, res) => {
   }
 };
 
+const addMedicine = async (req, res) => {
+  try {
+    const {
+      name,
+      price,
+      description,
+      quantity,
+      dosage,
+      expiryDate,
+      stockLot,
+      manufacturer,
+    } = req.body;
+
+    if (
+      !name ||
+      !price ||
+      !description ||
+      !quantity ||
+      !dosage ||
+      !expiryDate ||
+      !stockLot ||
+      !manufacturer
+    ) {
+      return res.status(400).json({ message: 'All the fields are mandatory!' });
+    }
+    const newMedicine = { ...req.body };
+    await db.collection('medicines').add(newMedicine);
+    return res.status(200).json({ message: 'Medicine added!' });
+  } catch (err) {
+    return res.status(500).json({ message: 'Error' + err });
+  }
+};
+
 const getAllMedicines = async (req, res) => {
   try {
     const medicineRef = db.collection('medicines');
@@ -96,6 +129,7 @@ const deleteAllMedicines = async (req, res) => {
 
 module.exports = {
   generateFakeMedicines,
+  addMedicine,
   getAllMedicines,
   getMedicineById,
   updateMedicine,
