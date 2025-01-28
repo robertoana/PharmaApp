@@ -4,6 +4,7 @@ import LoginView from '@/views/LoginView.vue';
 import HomeView from '@/views/HomeView.vue';
 import EntryView from '@/views/EntryView.vue';
 import StockView from '../views/StockView.vue';
+import TransactionView from '../views/TransactionView.vue';
 
 const routes = [
   {
@@ -25,6 +26,11 @@ const routes = [
     path: '/stoc',
     name: 'Stoc',
     component: StockView,
+  },
+  {
+    path: '/tranzactii',
+    name: 'Tranzactii',
+    component: TransactionView,
   },
 ];
 
