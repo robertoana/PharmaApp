@@ -5,6 +5,7 @@ import HomeView from '@/views/HomeView.vue';
 import EntryView from '@/views/EntryView.vue';
 import StockView from '../views/StockView.vue';
 import TransactionView from '../views/TransactionView.vue';
+import ExitView from '../views/ExitView.vue';
 
 const routes = [
   {
@@ -31,6 +32,11 @@ const routes = [
     path: '/tranzactii',
     name: 'Tranzactii',
     component: TransactionView,
+  },
+  {
+    path: '/iesiri',
+    name: 'Iesiri',
+    component: ExitView,
   },
 ];
 
