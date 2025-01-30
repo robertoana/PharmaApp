@@ -63,6 +63,7 @@
       <Button
         label="Finalizează tranzacția"
         class="p-button-rounded p-button-success mt-3"
+        @click="addTransaction"
       />
     </div>
   </div>
@@ -75,7 +76,6 @@ import InputGroupAddon from 'primevue/inputgroupaddon';
 import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
 import axios from 'axios';
-// import DateTime from 'luxon';
 
 export default {
   name: 'ExitView',
@@ -108,8 +108,8 @@ export default {
       }
     },
     verifyStockAndAddMedicineToTransaction() {
-      if (this.selectedMedicine.quantity <= this.quantity) {
-        alert('Boss e prea mult');
+      if (this.quantity > this.selectedMedicine.quantity) {
+        alert('Cantitatea depășește stocul!');
       } else {
         const medicineToAdd = {
           id: this.selectedMedicine.id,
@@ -126,6 +126,52 @@ export default {
     emptyForm() {
       this.quantity = null;
       this.selectedMedicine = null;
+    },
+    async addTransaction() {
+      try {
+        const payload = {
+          type: 'exit',
+          transactionPrice: this.finalPrice.toFixed(2),
+          transactionsDate: new Date().toISOString(),
+          userId: this.userId,
+          medicines: this.medicineToAddInTransaction(),
+        };
+        await axios.post(
+          `http://localhost:8090/api/transactions/addTransaction`,
+          payload
+        );
+        await this.updateMedicineStock();
+        alert('Adaugat!');
+      } catch (err) {
+        alert(`Eroare: ${err}`);
+      }
+    },
+    async updateMedicineStock() {
+      try {
+        this.transactions.map((medicine) => {
+          return axios.put(
+            `http://localhost:8090/api/medicines/${medicine.id}`,
+            {
+              quantity: this.getNewStock(medicine.id, medicine.quantity),
+            }
+          );
+        });
+        console.log('actualizat');
+      } catch (err) {
+        alert(`Eroare: ${err}`);
+      }
+    },
+    getNewStock(medicineId, quantitySold) {
+      const medicine = this.medicines.find((med) => med.id === medicineId);
+      return medicine.quantity - quantitySold;
+    },
+    medicineToAddInTransaction() {
+      return this.transactions.map((medicine) => ({
+        id: medicine.id,
+        name: medicine.name,
+        quantity: medicine.quantity,
+        price: medicine.price * medicine.quantity,
+      }));
     },
   },
   mounted() {
@@ -200,17 +246,8 @@ export default {
   font-weight: bold;
   text-align: left;
 }
-</style>
 
-<!-- const medicineToAdd = {
-  id: this.selectedMedicine.id,
-  transactionPrice: this.pricePerTransaction(
-    this.selectedMedicine.quantity,
-    this.selectedMedicine.price
-  ),
-  transactionsDate: DateTime.now()
-    .startof('day')
-    .toFormat("yyyy-MM-dd'T'HH:mm:ssZZ"),
-  userId: 'urmeaza',
-  medicines: [{}],
-}; -->
+.form-total Button {
+  margin-top: 1rem;
+}
+</style>
