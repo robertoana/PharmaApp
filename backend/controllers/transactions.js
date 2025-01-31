@@ -42,7 +42,24 @@ const getAllTransactions = async (req, res) => {
     }
     return res.status(200).json({ transactions });
   } catch (err) {
-    return res.status(500).send({ message: 'Error: ' + err.message });
+    return res.status(500).json({ message: 'Error: ' + err });
+  }
+};
+
+const addTransaction = async (req, res) => {
+  try {
+    const { type, transactionPrice, transactionsDate, userId, medicines } =
+      req.body;
+    const transactionRef = await db
+      .collection('transactions')
+      .add({ type, transactionPrice, transactionsDate, userId });
+    const medicinesCollection = transactionRef.collection('medicines');
+    for (const med of medicines) {
+      await medicinesCollection.add(med);
+    }
+    return res.status(201).json({ message: 'Added!' });
+  } catch (err) {
+    return res.status(500).json({ message: 'Error' + err });
   }
 };
 
@@ -107,6 +124,7 @@ const deleteTransactions = async (req, res) => {
 
 module.exports = {
   generateFakeTransactions,
+  addTransaction,
   getAllTransactions,
   getTransactionById,
   deleteTransactionById,

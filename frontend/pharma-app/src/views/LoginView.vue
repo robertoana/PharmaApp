@@ -5,16 +5,22 @@
         <h1>Login</h1>
 
         <FloatLabel>
-          <InputText id="username" v-model="data.username" />
-          <label for="username">Username</label>
+          <InputText id="email" v-model="email" />
+          <label for="email">Email</label>
         </FloatLabel>
 
         <FloatLabel>
-          <InputText id="password" type="password" v-model="data.password" />
+          <InputText id="password" type="password" v-model="password" />
           <label for="password">Password</label>
         </FloatLabel>
 
-        <Button label="Login" class="p-button-rounded p-button-success" />
+        <Button
+          label="Login"
+          class="p-button-rounded p-button-success"
+          @click="loginInApp"
+        />
+
+        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
       </div>
     </div>
 
@@ -25,6 +31,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import InputText from 'primevue/inputtext';
 import FloatLabel from 'primevue/floatlabel';
 import Button from 'primevue/button';
@@ -33,16 +40,26 @@ export default {
   name: 'LoginForm',
   data() {
     return {
-      data: {
-        username: '',
-        password: '',
-      },
+      email: '',
+      password: '',
+      errorMessage: '',
     };
   },
   components: {
     InputText,
     FloatLabel,
     Button,
+  },
+  methods: {
+    ...mapActions(['login']),
+    async loginInApp() {
+      try {
+        await this.login({ email: this.email, password: this.password });
+        this.$router.push('/home');
+      } catch (error) {
+        this.errorMessage = 'Date introduse greșit!';
+      }
+    },
   },
 };
 </script>

@@ -2,6 +2,7 @@ const router = require('express').Router();
 const transactionController = require('../controllers/transactions');
 
 router.post('/generateFakeTransactions', transactionController.generateFakeTransactions);
+router.post('/addTransaction', transactionController.addTransaction);
 router.get('/getAllTransactions', transactionController.getAllTransactions);
 router.get('/getTransactionById/:transactionId', transactionController.getTransactionById);
 router.delete('/deleteTransactionById/:transactionId', transactionController.deleteTransactionById);
