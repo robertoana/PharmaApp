@@ -49,13 +49,20 @@
             <td>{{ item.name }}</td>
             <td>{{ item.price }}</td>
             <td>{{ item.quantity }}</td>
-            <td>{{ item.subtotal }}</td>
+            <td>{{ item.subtotal.toFixed(2) }}</td>
+            <td>
+              <Button
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-danger p-button-text"
+                @click="deleteMedicineFromTransaction(item)"
+              />
+            </td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
             <td colspan="3" class="total-label">Total</td>
-            <td class="total-value">{{ finalPrice }}</td>
+            <td class="total-value">{{ finalPrice.toFixed(2) }}</td>
           </tr>
         </tfoot>
       </table>
@@ -76,6 +83,7 @@ import InputGroupAddon from 'primevue/inputgroupaddon';
 import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
 import axios from 'axios';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'ExitView',
@@ -102,15 +110,47 @@ export default {
           'http://localhost:8090/api/medicines/getAllMedicines'
         );
         this.medicines = response.data;
+        this.medicines = response.data.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
         console.log(this.medicines);
       } catch (err) {
         alert(`Error + ${err}`);
       }
     },
-    verifyStockAndAddMedicineToTransaction() {
+    validateTransactionInput() {
+      if (!this.selectedMedicine) {
+        alert('Selectează un medicament!');
+        return false;
+      }
+      if (!this.quantity || this.quantity <= 0) {
+        alert('Cantitatea trebuie să fie un număr mai mare decât 0!');
+        return false;
+      }
+
       if (this.quantity > this.selectedMedicine.quantity) {
         alert('Cantitatea depășește stocul!');
-      } else if (this.quantity > 0) {
+        return false;
+      }
+      return true;
+    },
+    verifyStockAndAddMedicineToTransaction() {
+      if (!this.validateTransactionInput()) {
+        return;
+      }
+      const transaction = this.transactions.find(
+        (item) => item.id === this.selectedMedicine.id
+      );
+      if (transaction) {
+        const newQuantity = transaction.quantity + this.quantity;
+        if (newQuantity > this.selectedMedicine.quantity) {
+          alert('Cantitatea depășește stocul disponibil!');
+          return;
+        }
+        transaction.quantity = newQuantity;
+        transaction.subtotal =
+          transaction.quantity * this.selectedMedicine.price;
+      } else {
         const medicineToAdd = {
           id: this.selectedMedicine.id,
           name: this.selectedMedicine.name,
@@ -121,8 +161,6 @@ export default {
         this.transactions.push(medicineToAdd);
         console.log(this.transactions);
         this.emptyForm();
-      } else {
-        alert('Cantitatea trebuie sa fie mai mare ca 0!');
       }
     },
     emptyForm() {
@@ -138,7 +176,7 @@ export default {
           type: 'exit',
           transactionPrice: this.finalPrice.toFixed(2),
           transactionsDate: new Date().toISOString(),
-          userId: this.userId,
+          userId: this.getUserName,
           medicines: this.medicineToAddInTransaction(),
         };
         await axios.post(
@@ -146,7 +184,7 @@ export default {
           payload
         );
         await this.updateMedicineStock();
-        alert('Adaugat!');
+        alert('Adugat!');
         this.emptyTable();
       } catch (err) {
         alert(`Eroare: ${err}`);
@@ -179,6 +217,11 @@ export default {
         price: medicine.price * medicine.quantity,
       }));
     },
+    deleteMedicineFromTransaction(medicine) {
+      this.transactions = this.transactions.filter(
+        (item) => item.id !== medicine.id
+      );
+    },
   },
   mounted() {
     this.getAllMedicines();
@@ -194,6 +237,7 @@ export default {
       }
       return sum;
     },
+    ...mapGetters(['getUserName']),
   },
 };
 </script>
@@ -217,6 +261,7 @@ export default {
   border: 1px solid #ccc;
   border-radius: 1rem;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  height: 350px;
 }
 
 .form-total {
@@ -255,5 +300,17 @@ export default {
 
 .form-total Button {
   margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .exit-page {
+    flex-direction: column;
+    align-items: center;
+  }
+  .form-exit,
+  .form-total {
+    width: 100%;
+    max-width: 500px;
+  }
 }
 </style>

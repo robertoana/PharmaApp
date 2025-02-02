@@ -3,7 +3,7 @@
   <nav class="navbar">
     <h1>PharmaApp</h1>
     <div class="user-info" v-if="isAuthenticated">
-      <span>Bun venit, {{ userName }}!</span>
+      <span>Bun venit, {{ getUserName }}!</span>
       <Button label="Logout" @click="handleLogout" class="p-button-danger" />
     </div>
   </nav>
@@ -17,9 +17,6 @@ export default {
   components: { Button },
   computed: {
     ...mapGetters(['isAuthenticated', 'getUserName']),
-    userName() {
-      return this.getUserName;
-    },
   },
   methods: {
     ...mapActions(['logout']),
