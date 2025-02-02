@@ -9,18 +9,24 @@ import {
 export default createStore({
   state: {
     user: null,
+    token: null,
   },
   getters: {
     isAuthenticated: (state) => !!state.user,
     getUser: (state) => state.user,
     getUserName: (state) => state.user.displayName,
+    getToken: (state) => state.token,
   },
   mutations: {
     SET_USER(state, user) {
       state.user = user;
     },
+    SET_TOKEN(state, token) {
+      state.token = token;
+    },
     CLEAR_USER(state) {
       state.user = null;
+      state.token = null;
     },
   },
   actions: {
@@ -33,7 +39,9 @@ export default createStore({
           password
         );
         const user = userCredential.user;
+        const token = await user.getIdToken();
         commit('SET_USER', user);
+        commit('SET_TOKEN', token);
         return user;
       } catch (error) {
         throw error;
@@ -44,9 +52,11 @@ export default createStore({
       commit('CLEAR_USER');
     },
     fetchUser({ commit }) {
-      onAuthStateChanged(auth, (user) => {
+      onAuthStateChanged(auth, async (user) => {
         if (user) {
+          const token = await user.getIdToken();
           commit('SET_USER', user);
+          commit('SET_TOKEN', token);
         } else {
           commit('CLEAR_USER');
         }

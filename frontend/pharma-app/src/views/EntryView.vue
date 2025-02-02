@@ -104,6 +104,11 @@ export default {
   methods: {
     async addMedicine() {
       try {
+        const token = this.$store.getters.getToken;
+        if (!token) {
+          alert('User not authenticated');
+          return;
+        }
         const payload = {
           name: this.denumireMedicament,
           price: this.pret,
@@ -116,7 +121,13 @@ export default {
         };
         const respone = await axios.post(
           'http://localhost:8090/api/medicines/addMedicine',
-          payload
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
         );
         console.log(respone.data.message);
       } catch (err) {
