@@ -12,6 +12,15 @@
       paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
       currentPageReportTemplate="{first} to {last} of {totalRecords} medicamente"
     >
+      <Column style="width: 5%">
+        <template #body="slotProps">
+          <Button
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-danger p-button-text"
+            @click="deleteMedicine(slotProps.data)"
+          />
+        </template>
+      </Column>
       <Column field="name" header="Nume" style="width: 15%"></Column>
       <Column field="price" header="Preț (RON)" style="width: 10%"></Column>
       <Column
@@ -39,6 +48,7 @@
 <script>
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import Button from 'primevue/button';
 import axios from 'axios';
 
 export default {
@@ -52,6 +62,7 @@ export default {
   components: {
     DataTable,
     Column,
+    Button,
   },
   methods: {
     async getAllMedicines() {
@@ -60,11 +71,23 @@ export default {
           'http://localhost:8090/api/medicines/getAllMedicines'
         );
         this.medicines = response.data;
+        console.log(this.medicines);
       } catch (err) {
         console.error(err);
         alert('eroare');
       } finally {
         this.loading = false;
+      }
+    },
+    async deleteMedicine(selectedMedicine) {
+      try {
+        const respone = await axios.delete(
+          `http://localhost:8090/api/medicines/deleteMedicine/${selectedMedicine.id}`
+        );
+        console.log(respone);
+        this.getAllMedicines();
+      } catch (err) {
+        alert('Eroare:' + err);
       }
     },
   },

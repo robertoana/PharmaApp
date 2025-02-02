@@ -110,7 +110,7 @@ export default {
     verifyStockAndAddMedicineToTransaction() {
       if (this.quantity > this.selectedMedicine.quantity) {
         alert('Cantitatea depășește stocul!');
-      } else {
+      } else if (this.quantity > 0) {
         const medicineToAdd = {
           id: this.selectedMedicine.id,
           name: this.selectedMedicine.name,
@@ -121,11 +121,16 @@ export default {
         this.transactions.push(medicineToAdd);
         console.log(this.transactions);
         this.emptyForm();
+      } else {
+        alert('Cantitatea trebuie sa fie mai mare ca 0!');
       }
     },
     emptyForm() {
       this.quantity = null;
       this.selectedMedicine = null;
+    },
+    emptyTable() {
+      this.transactions = [];
     },
     async addTransaction() {
       try {
@@ -142,6 +147,7 @@ export default {
         );
         await this.updateMedicineStock();
         alert('Adaugat!');
+        this.emptyTable();
       } catch (err) {
         alert(`Eroare: ${err}`);
       }
