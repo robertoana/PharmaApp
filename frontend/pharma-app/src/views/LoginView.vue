@@ -68,6 +68,7 @@ export default {
 .login-page {
   display: flex;
   height: 100%;
+  background-color: #f9f9f9;
 }
 
 .login-container {
@@ -75,16 +76,19 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f9f9f9;
   padding: 3rem;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .form-wrapper {
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 h1 {
@@ -109,5 +113,23 @@ h1 {
 .p-float-label {
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .login-page {
+    flex-direction: column;
+  }
+
+  .login-image {
+    display: none;
+  }
+
+  .login-container {
+    padding: 1.5rem;
+  }
+
+  .form-wrapper {
+    max-width: 100%;
+  }
 }
 </style>

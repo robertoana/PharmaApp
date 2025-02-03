@@ -246,7 +246,7 @@ export default {
 .exit-page {
   display: flex;
   flex-direction: row;
-  align-items: flex;
+  align-items: flex-start;
   gap: 2rem;
   padding: 2rem;
 }
@@ -257,11 +257,12 @@ export default {
   flex-direction: column;
   gap: 1.5rem;
   max-width: 400px;
+  width: 100%;
   padding: 2rem;
   border: 1px solid #ccc;
   border-radius: 1rem;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  height: 350px;
+  height: auto;
 }
 
 .form-total {
@@ -270,6 +271,8 @@ export default {
   border: 1px solid #ccc;
   border-radius: 1rem;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  width: 100%;
 }
 
 .receipt-table {
@@ -306,6 +309,7 @@ export default {
   .exit-page {
     flex-direction: column;
     align-items: center;
+    padding: 1rem;
   }
   .form-exit,
   .form-total {

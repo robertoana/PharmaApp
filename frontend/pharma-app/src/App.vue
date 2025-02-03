@@ -1,6 +1,8 @@
 <template>
-  <Navbar v-if="isAuthenticated" />
-  <router-view />
+  <div id="app">
+    <Navbar v-if="isAuthenticated" />
+    <router-view />
+  </div>
 </template>
 
 <script>
@@ -30,5 +32,6 @@ body {
   text-align: center;
   color: #2c3e50;
   height: 100%;
+  overflow-y: hidden;
 }
 </style>

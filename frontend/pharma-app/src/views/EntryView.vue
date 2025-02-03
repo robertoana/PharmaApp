@@ -144,24 +144,33 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  min-height: 100vh;
   background-color: #f9f9f9;
 }
 
 h1 {
   text-align: center;
   font-size: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  width: 40rem;
+  width: 100%;
+  max-width: 40rem;
   padding: 2rem;
   border: 1px solid #ccc;
   border-radius: 1rem;
   background-color: #fff;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    width: 90%;
+    padding: 1rem;
+  }
 }
 </style>

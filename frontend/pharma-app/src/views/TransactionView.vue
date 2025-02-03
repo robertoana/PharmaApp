@@ -69,6 +69,6 @@ export default {
 
 <style scoped>
 .card {
-  padding: 4rem;
+  padding: 3rem;
 }
 </style>
