@@ -129,7 +129,7 @@ export default {
             },
           }
         );
-        console.log(respone.data.message);
+        alert(respone.data.message);
       } catch (err) {
         alert(`Error: ${err.response.data.message}`);
       }
@@ -165,6 +165,7 @@ h1 {
   border-radius: 1rem;
   background-color: #fff;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 3rem;
 }
 
 @media (max-width: 768px) {

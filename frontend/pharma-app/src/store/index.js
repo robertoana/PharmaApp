@@ -1,10 +1,6 @@
 import { createStore } from 'vuex';
 import { auth } from '../firebase';
-import {
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-} from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 
 export default createStore({
   state: {
@@ -42,7 +38,6 @@ export default createStore({
         const token = await user.getIdToken();
         commit('SET_USER', user);
         commit('SET_TOKEN', token);
-        return user;
       } catch (error) {
         throw error;
       }
@@ -50,17 +45,6 @@ export default createStore({
     async logout({ commit }) {
       await signOut(auth);
       commit('CLEAR_USER');
-    },
-    fetchUser({ commit }) {
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          const token = await user.getIdToken();
-          commit('SET_USER', user);
-          commit('SET_TOKEN', token);
-        } else {
-          commit('CLEAR_USER');
-        }
-      });
     },
   },
 });

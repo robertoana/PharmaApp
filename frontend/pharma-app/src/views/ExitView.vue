@@ -109,7 +109,6 @@ export default {
         const response = await axios.get(
           'http://localhost:8090/api/medicines/getAllMedicines'
         );
-        this.medicines = response.data;
         this.medicines = response.data.sort((a, b) =>
           a.name.localeCompare(b.name)
         );

@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <nav class="navbar">
-    <h1>PharmaApp</h1>
+    <h1 @click="navigate">PharmaApp</h1>
     <div class="user-info" v-if="isAuthenticated">
       <span>Bun venit, {{ getUserName }}!</span>
       <Button label="Logout" @click="handleLogout" class="p-button-danger" />
@@ -25,6 +25,9 @@ export default {
         this.$router.push('/');
       });
     },
+    navigate() {
+      this.$router.push('/home');
+    },
   },
 };
 </script>
@@ -43,6 +46,7 @@ export default {
 h1 {
   margin: 0;
   font-size: 1.5rem;
+  cursor: pointer;
 }
 
 .user-info {
