@@ -104,6 +104,9 @@ export default {
   methods: {
     async addMedicine() {
       try {
+        if (!this.validateMedicineInput()) {
+          return;
+        }
         const token = this.$store.getters.getToken;
         if (!token) {
           alert('User not authenticated');
@@ -133,6 +136,37 @@ export default {
       } catch (err) {
         alert(`Error: ${err.response.data.message}`);
       }
+    },
+    validateMedicineInput() {
+      if (!this.denumireMedicament) {
+        alert('Denumirea medicamentului lipsește!');
+        return false;
+      }
+      if (!this.pret || this.pret <= 0) {
+        alert('Prețul trebuie să fie un număr mai mare ca 0!');
+        return false;
+      }
+      if (!this.dozaj || this.dozaj <= 0) {
+        alert('Dozajul trebuie să fie mai mare ca 0!');
+        return false;
+      }
+      if (!this.cantitate || this.cantitate <= 0) {
+        alert('Cantitatea trebuie să fie un număr mai mare ca 0!');
+        return false;
+      }
+      if (!this.dataExpirarii) {
+        alert('Selectați data expirării!');
+        return false;
+      }
+      if (!this.lot) {
+        alert('Introduceți lotul medicamentului!');
+        return false;
+      }
+      if (!this.producator) {
+        alert('Introduceți producătorul!');
+        return false;
+      }
+      return true;
     },
   },
 };
